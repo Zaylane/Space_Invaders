@@ -128,27 +128,6 @@ void deplacement_vaisseau(void) {
 	}
 }
 
-void shoot(void) {
-	if (depla == 'v') {
-		debut_tir = vx + 2;
-		vy = 25;
-		vt100_move(debut_tir, vy);
-		serial_puts(" ");
-	}
-	if (vy >= 3) {
-		vt100_move(debut_tir, vy);
-		serial_puts(" ");
-		vy -= 1;
-		vt100_move(debut_tir, vy);
-		serial_puts("o");
-		delai(2);
-	} else {
-		vt100_move(debut_tir, vy);
-		serial_puts(" ");
-	}
-}
-
-
 typedef struct alien {
 	uint8_t x;
 	uint8_t y;
@@ -212,6 +191,7 @@ uint8_t deplacement_ennemi(void) {
 
 void collision(void) {
 	uint8_t va = 0;
+	static uint8_t score = 0;
 	for (va = 0; va < 6; va++) {
 		if (vy == aliens[va].y && debut_tir >= aliens[va].x
 				&& debut_tir <= aliens[va].x + 4) {
@@ -219,14 +199,39 @@ void collision(void) {
 			vt100_move(aliens[va].x, aliens[va].y);
 			serial_puts("       ");
 			aliens[va].statut = 0;
-		}
+			score += 10;
+			vt100_move(3, 3);
+			serial_puts("Score : ");
+			serial_putchar('0' + (score / 10));
+			serial_putchar('0' + (score % 10));
 
+		}
 	}
 }
+	void fin_de_partie(void) {
+		vt100_clear_screen();
+		fenetre('#', '#');
+		vt100_move(38, 10);
+		serial_puts("Game Over");
+	}
 
-void fin_de_partie(void) {
-	vt100_clear_screen();
-	fenetre('#', '#');
-	vt100_move(38, 10);
-	serial_puts("Game Over");
-}
+	void shoot(void) {
+		if (depla == 'v') {
+			debut_tir = vx + 2;
+			vy = 25;
+			vt100_move(debut_tir, vy);
+			serial_puts(" ");
+		}
+		if (vy >= 3) {
+			vt100_move(debut_tir, vy);
+			serial_puts(" ");
+			vy -= 1;
+			vt100_move(debut_tir, vy);
+			serial_puts("o");
+			delai(2);
+		} else {
+			vt100_move(debut_tir, vy);
+			serial_puts(" ");
+		}
+	}
+
