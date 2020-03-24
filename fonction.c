@@ -128,6 +128,27 @@ void deplacement_vaisseau(void) {
 	}
 }
 
+void shoot(void) {
+	if (depla == 'v') {
+		debut_tir = vx + 2;
+		vy = 25;
+		vt100_move(debut_tir, vy);
+		serial_puts(" ");
+	}
+	if (vy >= 3) {
+		vt100_move(debut_tir, vy);
+		serial_puts(" ");
+		vy -= 1;
+		vt100_move(debut_tir, vy);
+		serial_puts("o");
+		delai(2);
+	} else {
+		vt100_move(debut_tir, vy);
+		serial_puts(" ");
+	}
+}
+
+
 typedef struct alien {
 	uint8_t x;
 	uint8_t y;
@@ -209,24 +230,3 @@ void fin_de_partie(void) {
 	vt100_move(38, 10);
 	serial_puts("Game Over");
 }
-
-void shoot(void) {
-	if (depla == 'v') {
-		debut_tir = vx + 2;
-		vy = 25;
-		vt100_move(debut_tir, vy);
-		serial_puts(" ");
-	}
-	if (vy >= 3) {
-		vt100_move(debut_tir, vy);
-		serial_puts(" ");
-		vy -= 1;
-		vt100_move(debut_tir, vy);
-		serial_puts("o");
-		delai(2);
-	} else {
-		vt100_move(debut_tir, vy);
-		serial_puts(" ");
-	}
-}
-
